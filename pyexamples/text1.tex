@@ -1,0 +1,630 @@
+
+\documentclass[border=8pt, multi, tikz]{standalone} 
+\usepackage{import}
+\subimport{../layers/}{init}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d} %for including external image 
+
+\def\ConvColor{rgb:yellow,5;red,2.5;white,5}
+\def\ConvnormColor{rgb:yellow,0;red,10.5;white,5}
+\def\ConvReluColor{rgb:yellow,9;red,20.5;white,5}
+\def\PoolColor{rgb:red,1;black,0.3}
+\def\UnpoolColor{rgb:blue,2;green,1;black,0.3}
+\def\FcColor{rgb:blue,5;red,2.5;white,5}
+\def\FcReluColor{rgb:blue,5;red,5;white,4}
+\def\SoftmaxColor{rgb:magenta,5;black,7}   
+\def\SumColor{rgb:blue,5;green,15}
+
+\newcommand{\copymidarrow}{\tikz \draw[-Stealth,line width=0.8mm,draw={rgb:blue,4;red,1;green,1;black,3}] (-0.3,0) -- ++(0.3,0);}
+
+\begin{document}
+\begin{tikzpicture}
+\tikzstyle{connection}=[ultra thick,every node/.style={sloped,allow upside down},draw=\edgecolor,opacity=0.7]
+\tikzstyle{copyconnection}=[ultra thick,every node/.style={sloped,allow upside down},draw={rgb:blue,4;red,1;green,1;black,3},opacity=0.7]
+
+\pic[shift={(0,0,0)}] at (0,0,0) 
+    {Box={
+        name=imput,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=12,
+        depth=16
+        }
+    };
+
+\pic[shift={(1.5,2.5,0)}] at (imput-east) 
+    {Box={
+        name=ccr_1_Conv_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=4,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_1_Conv_1-east) 
+    {Box={
+        name=1_norm_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (1_norm_1-east) 
+    {Box={
+        name=1_relu_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (imput-east)    -- node {\midarrow} (ccr_1_Conv_1-west);
+
+\pic[shift={(1,0,0)}] at (1_relu_1-east) 
+    {Box={
+        name=ccr_1_Conv_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=8,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_1_Conv_2-east) 
+    {Box={
+        name=1_norm_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (1_norm_2-east) 
+    {Box={
+        name=1_relu_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (1_relu_1-east)    -- node {\midarrow} (ccr_1_Conv_2-west);
+
+\pic[shift={(1,0,0)}] at (1_relu_2-east) 
+    {Box={
+        name=ccr_1_Conv_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=4,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_1_Conv_3-east) 
+    {Box={
+        name=1_norm_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (1_norm_3-east) 
+    {Box={
+        name=1_relu_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (1_relu_2-east)    -- node {\midarrow} (ccr_1_Conv_3-west);
+
+\pic[shift={(1,0,0)}] at (1_relu_3-east) 
+    {Box={
+        name=ccr_1_Conv_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=8,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_1_Conv_4-east) 
+    {Box={
+        name=1_norm_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (1_norm_4-east) 
+    {Box={
+        name=1_relu_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (1_relu_3-east)    -- node {\midarrow} (ccr_1_Conv_4-west);
+
+\pic[shift={(1,0,0)}] at (1_relu_4-east) 
+    {Box={
+        name=1_Conv_5,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=1.5,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (1_Conv_5-east) 
+    {Box={
+        name=SoftMax,
+        caption= ,
+        xlabel={{" ","dummy"}},
+        zlabel=16,
+        fill=\SoftmaxColor,
+        opacity=0.5,
+        height=16,
+        width=0.5,
+        depth=16
+        }
+    };
+
+\draw [connection]  (1_relu_4-east)    -- node {\midarrow} (1_Conv_5-west);
+
+\pic[shift={(1,0,0)}] at (SoftMax-east) 
+    {Box={
+        name=MLP_input_1_1,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=5
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_input_1_1-east) 
+    {Box={
+        name=MLP_input_1_2,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=5
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_input_1_2-east) 
+    {Box={
+        name=MLP_input_1_3,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=5
+        }
+    };
+
+\draw [connection]  (SoftMax-east)    -- node {\midarrow} (MLP_input_1_1-west);
+
+\pic[shift={(1,0,0)}] at (MLP_input_1_3-east) 
+    {Box={
+        name=MLP_input_2_1,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=20
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_input_2_1-east) 
+    {Box={
+        name=MLP_input_2_2,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=20
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_input_2_2-east) 
+    {Box={
+        name=MLP_input_2_3,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=20
+        }
+    };
+
+\draw [connection]  (MLP_input_1_3-east)    -- node {\midarrow} (MLP_input_2_1-west);
+
+\pic[shift={(1,0,0)}] at (MLP_input_2_3-east) 
+    {Box={
+        name=MLP_out_1_1,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_1_1-east) 
+    {Box={
+        name=MLP_out_1_2,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_1_2-east) 
+    {Box={
+        name=MLP_out_1_3,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,0;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\draw [connection]  (MLP_input_2_3-east)    -- node {\midarrow} (MLP_out_1_1-west);
+
+\pic[shift={(1.5,-2.5,0)}] at (imput-east) 
+    {Box={
+        name=ccr_2_Conv_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=4,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_2_Conv_1-east) 
+    {Box={
+        name=2_norm_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (2_norm_1-east) 
+    {Box={
+        name=2_relu_1,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (imput-east)    -- node {\midarrow} (ccr_2_Conv_1-west);
+
+\pic[shift={(1,0,0)}] at (2_relu_1-east) 
+    {Box={
+        name=ccr_2_Conv_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=8,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_2_Conv_2-east) 
+    {Box={
+        name=2_norm_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (2_norm_2-east) 
+    {Box={
+        name=2_relu_2,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (2_relu_1-east)    -- node {\midarrow} (ccr_2_Conv_2-west);
+
+\pic[shift={(1,0,0)}] at (2_relu_2-east) 
+    {Box={
+        name=ccr_2_Conv_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=4,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_2_Conv_3-east) 
+    {Box={
+        name=2_norm_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (2_norm_3-east) 
+    {Box={
+        name=2_relu_3,
+        caption= ,
+        xlabel={{(256, 256), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=1.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (2_relu_2-east)    -- node {\midarrow} (ccr_2_Conv_3-west);
+
+\pic[shift={(1,0,0)}] at (2_relu_3-east) 
+    {Box={
+        name=ccr_2_Conv_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=8,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (ccr_2_Conv_4-east) 
+    {Box={
+        name=2_norm_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvnormColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (2_norm_4-east) 
+    {Box={
+        name=2_relu_4,
+        caption= ,
+        xlabel={{(512, 512), }},
+        zlabel=16,
+        fill=\ConvReluColor,
+        height=16,
+        width=2.0,
+        depth=16
+        }
+    };
+
+\draw [connection]  (2_relu_3-east)    -- node {\midarrow} (ccr_2_Conv_4-west);
+
+\pic[shift={(1,0,0)}] at (2_relu_4-east) 
+    {Box={
+        name=2_Conv_5,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill=\ConvColor,
+        height=16,
+        width=4,
+        depth=16
+        }
+    };
+
+\draw [connection]  (2_relu_4-east)    -- node {\midarrow} (2_Conv_5-west);
+
+\pic[shift={(3.5,0,0)}] at (2_Conv_5-east) 
+    {Box={
+        name=MLP_out_2_1,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,0;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_2_1-east) 
+    {Box={
+        name=MLP_out_2_2,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,0;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_2_2-east) 
+    {Box={
+        name=MLP_out_2_3,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,0;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\draw [connection]  (2_Conv_5-east)    -- node {\midarrow} (MLP_out_2_1-west);
+
+\pic[shift={(3,2.5,0)}] at (MLP_out_2_3-east) 
+    {Ball={
+        name=sum,
+        fill=\SumColor,
+        opacity=0.6,
+        radius=2.5,
+        logo=$+$
+        }
+    };
+
+\draw [connection]  (MLP_out_2_3-east)    -- node {\midarrow} (sum-west);
+
+\draw [connection]  (MLP_out_1_3-east)    -- node {\midarrow} (sum-west);
+
+\pic[shift={(1,0,0)}] at (sum-east) 
+    {Box={
+        name=MLP_out_3_1,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_3_1-east) 
+    {Box={
+        name=MLP_out_3_2,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\pic[shift={(0,0,0)}] at (MLP_out_3_2-east) 
+    {Box={
+        name=MLP_out_3_3,
+        caption= ,
+        xlabel={{512, }},
+        zlabel=16,
+        fill={rgb:blue,5;red,5;white,0},
+        height=1,
+        width=1,
+        depth=40
+        }
+    };
+
+\draw [connection]  (sum-east)    -- node {\midarrow} (MLP_out_3_1-west);
+
+\end{tikzpicture}
+\end{document}
